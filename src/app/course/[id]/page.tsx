@@ -31,6 +31,7 @@ import {
   Cancel as CancelIcon,
   Person as PersonIcon,
   Category as CategoryIcon,
+  OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
 import { courses } from '@/data/courses';
 import { Course } from '@/types/course';
@@ -111,7 +112,7 @@ export default function CourseDetailsPage() {
           <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
             {course.title}
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             {course.description}
           </Typography>
           
@@ -232,7 +233,7 @@ export default function CourseDetailsPage() {
                 </Alert>
               ) : course.teacherGuides.guides && course.teacherGuides.guides.length > 0 ? (
                 <Box>
-                  <Typography variant="body1" gutterBottom sx={{ fontWeight: 500 }}>
+                  <Typography variant="body1" gutterBottom sx={{ fontWeight: 500, mb: 2 }}>
                     Available Teacher Guides:
                   </Typography>
                   <List>
@@ -245,11 +246,24 @@ export default function CourseDetailsPage() {
                           primary={guide.title}
                           secondary={`Status: ${guide.status}`}
                         />
-                        <Chip
-                          label={guide.status}
-                          color={getTeacherGuideStatusColor(guide.status)}
-                          size="small"
-                        />
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Chip
+                            label={guide.status}
+                            color={getTeacherGuideStatusColor(guide.status)}
+                            size="small"
+                          />
+                          <Button
+                            variant="contained"
+                            size="small"
+                            startIcon={<OpenInNewIcon />}
+                            color="primary"
+                            onClick={() => {
+                              router.push(`/course/${courseId}/guide/${guide.id}`);
+                            }}
+                          >
+                            Open Guide
+                          </Button>
+                        </Box>
                       </ListItem>
                     ))}
                   </List>

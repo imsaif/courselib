@@ -36,7 +36,7 @@ import { courses } from '@/data/courses';
 import { Course, CourseFilters } from '@/types/course';
 
 const CATEGORIES = ['All', 'Mathematics', 'Language Arts', 'Science', 'Social Studies', 'Arts'];
-const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+const LEVELS = ['All', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'];
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -76,30 +76,58 @@ export default function CoursesPage() {
 
   const getTeacherGuideStatusInfo = (course: Course) => {
     const pendingCount = getPendingGuidesCount(course);
+    const totalGuides = course.teacherGuides.guides?.length || 0;
     
     if (course.teacherGuides.status === 'guideless') {
       return {
-        icon: <CancelIcon />,
+        icon: <CancelIcon sx={{ fontSize: 16 }} />,
         label: 'No Guides Required',
         color: 'default' as const,
-        severity: 'info' as const
+        severity: 'info' as const,
+        customStyles: {
+          backgroundColor: '#f5f5f5',
+          color: '#757575',
+          border: '1px solid #e0e0e0',
+          fontWeight: 500,
+          '& .MuiChip-icon': {
+            color: '#757575'
+          }
+        }
       };
     }
     
     if (pendingCount > 0) {
       return {
-        icon: <WarningIcon />,
+        icon: <WarningIcon sx={{ fontSize: 16 }} />,
         label: `${pendingCount} Pending`,
         color: 'warning' as const,
-        severity: 'warning' as const
+        severity: 'warning' as const,
+        customStyles: {
+          backgroundColor: '#fff3e0',
+          color: '#e65100',
+          border: '1px solid #ffb74d',
+          fontWeight: 600,
+          '& .MuiChip-icon': {
+            color: '#ff9800'
+          }
+        }
       };
     }
     
     return {
-      icon: <CheckCircleIcon />,
-      label: 'All Approved',
+      icon: <CheckCircleIcon sx={{ fontSize: 16 }} />,
+      label: `All ${totalGuides} Approved`,
       color: 'success' as const,
-      severity: 'success' as const
+      severity: 'success' as const,
+      customStyles: {
+        backgroundColor: '#e8f5e8',
+        color: '#2e7d32',
+        border: '1px solid #81c784',
+        fontWeight: 600,
+        '& .MuiChip-icon': {
+          color: '#4caf50'
+        }
+      }
     };
   };
 
@@ -237,7 +265,7 @@ export default function CoursesPage() {
               >
                 <ListItemText
                   primary={
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Typography variant="h6" component="h2" sx={{ fontWeight: 500 }}>
                         {course.title}
                       </Typography>
@@ -247,22 +275,31 @@ export default function CoursesPage() {
                           <Chip
                             icon={statusInfo.icon}
                             label={statusInfo.label}
-                            color={statusInfo.color}
                             size="small"
-                            variant="outlined"
+                            variant="filled"
+                            sx={{
+                              ...statusInfo.customStyles,
+                              borderRadius: '16px',
+                              fontSize: '0.75rem',
+                              height: '28px',
+                              '& .MuiChip-label': {
+                                paddingX: 1.5,
+                                fontWeight: statusInfo.customStyles.fontWeight
+                              }
+                            }}
                           />
                         );
                       })()}
                     </Box>
                   }
                   secondary={
-                    <Box mt={1}>
-                      <Typography variant="body2" color="text.secondary">
+                    <Box component="div">
+                      <Box component="div" sx={{ fontSize: '0.875rem', color: 'text.secondary', mt: 1 }}>
                         {course.description.length > 120 
                           ? `${course.description.substring(0, 120)}...` 
                           : course.description}
-                      </Typography>
-                      <Box display="flex" gap={1} mt={1}>
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                         <Chip label={course.location} size="small" color="primary" variant="outlined" />
                         <Chip label={course.category} size="small" color="secondary" variant="outlined" />
                         <Chip label={course.level} size="small" color="info" variant="outlined" />
@@ -272,24 +309,14 @@ export default function CoursesPage() {
                 />
                 
                 <ListItemSecondaryAction>
-                  <Badge 
-                    badgeContent={getPendingGuidesCount(course)} 
-                    color="warning"
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    invisible={getPendingGuidesCount(course) === 0}
+                  <Button 
+                    variant="contained" 
+                    startIcon={<VisibilityIcon />}
+                    size="small"
+                    onClick={() => router.push(`/course/${course.id}`)}
                   >
-                    <Button 
-                      variant="contained" 
-                      startIcon={<VisibilityIcon />}
-                      size="small"
-                      onClick={() => router.push(`/course/${course.id}`)}
-                    >
-                      Course Details
-                    </Button>
-                  </Badge>
+                    Course Details
+                  </Button>
                 </ListItemSecondaryAction>
               </ListItem>
               {index < filteredCourses.length - 1 && <Divider />}

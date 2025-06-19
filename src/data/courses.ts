@@ -11,7 +11,7 @@ export const courses: Course[] = [
       minimum: 30, // 30 minutes
       maximum: 45, // 45 minutes
     },
-    level: 'Beginner',
+    level: 'Grade 1',
     category: 'Mathematics',
     location: 'Global',
     imageUrl: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=300&fit=crop',
@@ -73,7 +73,7 @@ export const courses: Course[] = [
       minimum: 40, // 40 minutes
       maximum: 60, // 60 minutes
     },
-    level: 'Intermediate',
+    level: 'Grade 3',
     category: 'Language Arts',
     location: 'Regional',
     imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop',
@@ -140,7 +140,7 @@ export const courses: Course[] = [
       minimum: 45, // 45 minutes
       maximum: 75, // 75 minutes
     },
-    level: 'Beginner',
+    level: 'Grade 2',
     category: 'Science',
     location: 'Programme',
     imageUrl: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=300&fit=crop',
@@ -168,7 +168,7 @@ export const courses: Course[] = [
       minimum: 35, // 35 minutes
       maximum: 50, // 50 minutes
     },
-    level: 'Intermediate',
+    level: 'Grade 4',
     category: 'Mathematics',
     location: 'Global',
     imageUrl: 'https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400&h=300&fit=crop',
@@ -240,7 +240,7 @@ export const courses: Course[] = [
       minimum: 50, // 50 minutes
       maximum: 70, // 70 minutes
     },
-    level: 'Intermediate',
+    level: 'Grade 4',
     category: 'Language Arts',
     location: 'Regional',
     imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=300&fit=crop',
@@ -300,7 +300,7 @@ export const courses: Course[] = [
       minimum: 35,
       maximum: 55,
     },
-    level: 'Intermediate',
+    level: 'Grade 5',
     category: 'Social Studies',
     location: 'Global',
     imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
@@ -362,7 +362,7 @@ export const courses: Course[] = [
       minimum: 60,
       maximum: 90,
     },
-    level: 'Beginner',
+    level: 'Grade 2',
     category: 'Arts',
     location: 'Programme',
     imageUrl: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&h=300&fit=crop',
@@ -390,7 +390,7 @@ export const courses: Course[] = [
       minimum: 25,
       maximum: 40,
     },
-    level: 'Beginner',
+    level: 'Grade 1',
     category: 'Language Arts',
     location: 'Global',
     imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
@@ -462,7 +462,7 @@ export const courses: Course[] = [
       minimum: 45,
       maximum: 65,
     },
-    level: 'Advanced',
+    level: 'Grade 5',
     category: 'Mathematics',
     location: 'Regional',
     imageUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop',
@@ -529,7 +529,7 @@ export const courses: Course[] = [
       minimum: 50,
       maximum: 75,
     },
-    level: 'Intermediate',
+    level: 'Grade 4',
     category: 'Science',
     location: 'Global',
     imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop',
