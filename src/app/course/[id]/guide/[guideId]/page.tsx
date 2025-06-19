@@ -301,49 +301,6 @@ const getTeacherGuideDetails = (courseId: string, guideId: string): TeacherGuide
         version: '2.1',
         status: 'approved'
       }
-    ],
-    // Simplified history for the existing timeline
-    history: [
-      {
-        id: 'h1',
-        action: 'submitted',
-        date: '2024-01-10',
-        time: '09:30 AM',
-        user: 'Ms. Sarah Johnson',
-        role: 'Teacher',
-        comment: 'Initial submission of Addition Concepts Teacher Guide v2.1',
-        status: 'pending'
-      },
-      {
-        id: 'h2',
-        action: 'reviewed',
-        date: '2024-01-12',
-        time: '02:15 PM',
-        user: 'Dr. Michael Chen',
-        role: 'Curriculum Supervisor',
-        comment: 'Reviewed guide - requesting minor revisions to assessment section',
-        status: 'revision_requested'
-      },
-      {
-        id: 'h3',
-        action: 'revised',
-        date: '2024-01-14',
-        time: '11:45 AM',
-        user: 'Ms. Sarah Johnson',
-        role: 'Teacher',
-        comment: 'Updated assessment strategies based on feedback. Added rubrics and sample questions.',
-        status: 'pending'
-      },
-      {
-        id: 'h4',
-        action: 'approved',
-        date: '2024-01-15',
-        time: '04:20 PM',
-        user: 'Dr. Michael Chen',
-        role: 'Curriculum Supervisor',
-        comment: 'Guide approved. Excellent work on the assessment section improvements.',
-        status: 'approved'
-      }
     ]
   };
 };
