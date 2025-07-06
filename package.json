@@ -1,7 +1,7 @@
 {
   "name": "course-library",
   "version": "1.0.0",
-  "description": "A modern course library web application using Material Design",
+  "description": "Rwanda EQUIP Course Library MVP - A modern course management and teacher guide approval system prototype",
   "scripts": {
     "dev": "node node_modules/next/dist/bin/next dev",
     "build": "node node_modules/next/dist/bin/next build",

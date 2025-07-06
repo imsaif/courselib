@@ -39,7 +39,6 @@ import {
   TimelineOppositeContent,
 } from '@mui/lab';
 import {
-  ArrowBack as ArrowBackIcon,
   Assignment as AssignmentIcon,
   CheckCircle as CheckCircleIcon,
   Cancel as CancelIcon,
@@ -63,6 +62,7 @@ import {
   Assignment as MaterialsIcon,
   PlayArrow as PlayIcon,
   Stop as StopIcon,
+  OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
 import { courses } from '@/data/courses';
 import { TeacherGuideDetails } from '@/types/course';
@@ -150,6 +150,10 @@ const getTeacherGuideDetails = (courseId: string, guideId: string): TeacherGuide
 
   const sampleData = sampleGuides[guide.id] || sampleGuides['guide-1-1'];
 
+  // Determine guide type
+  const isOriginalRejectedGuide = guide.id === 'guide-1-3';
+  const isResubmittedGuide = guide.id === 'guide-1-3-v2';
+  
   return {
     id: guide.id,
     title: guide.title,
@@ -157,12 +161,121 @@ const getTeacherGuideDetails = (courseId: string, guideId: string): TeacherGuide
     courseName: course.title,
     description: 'This teacher guide provides simple, step-by-step instructions for teaching fundamental math concepts to elementary students.',
     author: 'Ms. Sarah Johnson',
-    version: '2.1',
-    lastModified: '2024-01-15',
+    version: isResubmittedGuide ? '2.3' : '2.1',
+    lastModified: isResubmittedGuide ? '2024-01-20' : '2024-01-15',
     fileSize: '350 KB',
     pages: 8,
     lesson: sampleData.lesson!,
-    detailedHistory: [
+    // Add simple linking for guide relationship
+    ...(isResubmittedGuide && {
+      relatedGuideId: 'guide-1-3',
+      relatedGuideTitle: 'Number Line Activities Guide (Original)',
+      relatedGuideStatus: 'revision_requested' as const,
+      revisionReason: 'The visual aids section needs improvement. Please add more concrete examples and clearer diagrams for number line activities.',
+      isRevision: true
+    }),
+    ...(isOriginalRejectedGuide && {
+      relatedGuideId: 'guide-1-3-v2',
+      relatedGuideTitle: 'Number Line Activities Guide (Revised)',
+      relatedGuideStatus: 'resubmitted' as const,
+      revisionReason: 'The visual aids section needs improvement. Please add more concrete examples and clearer diagrams for number line activities.',
+      isOriginal: true
+    }),
+    detailedHistory: isResubmittedGuide ? [
+      {
+        id: 'h1',
+        action: 'created',
+        type: 'document',
+        date: '2024-01-05',
+        time: '09:00 AM',
+        user: 'Ms. Sarah Johnson',
+        role: 'Teacher',
+        avatar: '/avatars/sarah.jpg',
+        comment: 'Created initial document structure',
+        changes: ['Document created', 'Basic template applied'],
+        version: '1.0',
+        status: 'draft'
+      },
+      {
+        id: 'h2',
+        action: 'submitted',
+        type: 'workflow',
+        date: '2024-01-10',
+        time: '09:30 AM',
+        user: 'Ms. Sarah Johnson',
+        role: 'Teacher',
+        avatar: '/avatars/sarah.jpg',
+        comment: 'Initial submission of Number Line Activities Guide v2.0',
+        changes: ['Document submitted for official review'],
+        version: '2.0',
+        status: 'pending'
+      },
+      {
+        id: 'h3',
+        action: 'reviewed',
+        type: 'workflow',
+        date: '2024-01-12',
+        time: '02:15 PM',
+        user: 'Dr. Michael Chen',
+        role: 'Curriculum Supervisor',
+        avatar: '/avatars/michael.jpg',
+        comment: 'Reviewed guide - requesting revisions to visual aids section',
+        changes: ['Official review completed', 'Revision notes added'],
+        version: '2.0',
+        status: 'revision_requested',
+        isRevisionCycle: true,
+        rejectionReason: 'The visual aids section needs improvement. Please add more concrete examples and clearer diagrams for number line activities.'
+      },
+      {
+        id: 'h4',
+        action: 'revised',
+        type: 'revision',
+        date: '2024-01-16',
+        time: '10:30 AM',
+        user: 'Ms. Sarah Johnson',
+        role: 'Teacher',
+        avatar: '/avatars/sarah.jpg',
+        comment: 'Extensively revised visual aids section based on reviewer feedback',
+        changes: [
+          'Added 3 new interactive number line games',
+          'Created colorful visual diagrams for addition/subtraction',
+          'Developed peer assessment rubrics',
+          'Added parent homework support materials'
+        ],
+        version: '2.2',
+        status: 'draft',
+        isRevisionCycle: true,
+        previousVersion: '2.0',
+        changesSummary: {
+          sectionsModified: ['Visual Aids', 'Activity Instructions', 'Assessment Methods'],
+          addedContent: [
+            'Interactive number line games (3 new activities)',
+            'Colorful visual diagrams for addition/subtraction',
+            'Peer assessment rubrics',
+            'Parent homework support materials'
+          ],
+          removedContent: ['Outdated worksheet references'],
+          changesDescription: 'Comprehensive revision addressing reviewer feedback with enhanced visual materials, new interactive activities, and improved assessment strategies.',
+          totalChanges: 12
+        }
+      },
+      {
+        id: 'h5',
+        action: 'resubmitted',
+        type: 'workflow',
+        date: '2024-01-20',
+        time: '11:15 AM',
+        user: 'Ms. Sarah Johnson',
+        role: 'Teacher',
+        avatar: '/avatars/sarah.jpg',
+        comment: 'Resubmitted with comprehensive revisions addressing all reviewer feedback',
+        changes: ['Document resubmitted for re-review', 'All revision requirements addressed'],
+        version: '2.3',
+        status: 'resubmitted',
+        isRevisionCycle: true,
+        previousVersion: '2.0'
+      }
+    ] : [
       {
         id: 'h1',
         action: 'created',
@@ -342,6 +455,7 @@ export default function TeacherGuideDetailPage() {
       case 'approved': return 'success';
       case 'pending': return 'warning';
       case 'revision_requested': return 'error';
+      case 'resubmitted': return 'info';
       default: return 'default';
     }
   };
@@ -351,6 +465,7 @@ export default function TeacherGuideDetailPage() {
       case 'approved': return <CheckCircleIcon />;
       case 'pending': return <PendingIcon />;
       case 'revision_requested': return <EditIcon />;
+      case 'resubmitted': return <ScheduleIcon />;
       default: return <AssignmentIcon />;
     }
   };
@@ -412,21 +527,11 @@ export default function TeacherGuideDetailPage() {
 
   return (
     <Box>
-      {/* Header with Back Button and History Icon */}
+      {/* Header with History Icon */}
       <Box mb={3} display="flex" alignItems="center" justifyContent="space-between">
-        <Box display="flex" alignItems="center">
-          <Button
-            startIcon={<ArrowBackIcon />}
-            variant="outlined"
-            onClick={() => router.push(`/course/${courseId}`)}
-            sx={{ mr: 2 }}
-          >
-            Back to Course
-          </Button>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 600 }}>
-            Teacher Guide Details
-          </Typography>
-        </Box>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 600 }}>
+          Teacher Guide Details
+        </Typography>
         
         {/* History Button - Google Docs Style */}
         <Tooltip title="View document history">
@@ -439,6 +544,7 @@ export default function TeacherGuideDetailPage() {
                 backgroundColor: 'action.hover',
               },
             }}
+            aria-label="View document history"
           >
             <Badge badgeContent={guideDetails.detailedHistory.length} color="primary" max={99}>
               <HistoryIcon />
@@ -467,7 +573,7 @@ export default function TeacherGuideDetailPage() {
                 icon={getStatusIcon(guideDetails.status)}
                 label={guideDetails.status.replace('_', ' ').toUpperCase()}
                 color={getStatusColor(guideDetails.status)}
-                size="large"
+                size="medium"
                 sx={{ ml: 2 }}
               />
             </Box>
@@ -501,14 +607,85 @@ export default function TeacherGuideDetailPage() {
               </Grid>
             </Grid>
 
+            {/* Related Guide Information - Simple MVP Approach */}
+            {(guideDetails.relatedGuideId) && (
+              <Alert 
+                severity={guideDetails.isRevision ? "info" : "warning"} 
+                sx={{ mb: 3 }}
+              >
+                <Box>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    {guideDetails.isRevision ? (
+                      <EditIcon sx={{ mr: 1, color: 'info.main' }} />
+                    ) : (
+                      <VisibilityIcon sx={{ mr: 1, color: 'warning.main' }} />
+                    )}
+                    <Typography variant="h6" sx={{ fontWeight: 'fontWeightSemiBold' }}>
+                      {guideDetails.isRevision ? "📝 This is a Revised Guide" : "⚠️ This Guide Has Been Revised"}
+                    </Typography>
+                  </Box>
+
+                  {/* Revision Context */}
+                  {guideDetails.revisionReason && (
+                    <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'fontWeightSemiBold' }}>
+                        Original Feedback:
+                      </Typography>
+                      <Typography variant="body2" sx={{ mt: 1 }}>
+                        "{guideDetails.revisionReason}"
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {/* Related Guide Link */}
+                  <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'fontWeightSemiBold' }}>
+                        {guideDetails.isRevision ? "View Original Guide:" : "View Revised Guide:"}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {guideDetails.relatedGuideTitle}
+                      </Typography>
+                      <Chip 
+                        size="small" 
+                        label={guideDetails.relatedGuideStatus?.replace('_', ' ').toUpperCase()} 
+                        color={guideDetails.relatedGuideStatus === 'revision_requested' ? 'error' : 'info'}
+                        sx={{ mt: 0.5 }}
+                      />
+                    </Box>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<OpenInNewIcon />}
+                      onClick={() => {
+                        const url = `/course/${courseId}/guide/${guideDetails.relatedGuideId}`;
+                        window.open(url, '_blank');
+                      }}
+                      sx={{ fontSize: '0.75rem' }}
+                      aria-label={`Open ${guideDetails.relatedGuideTitle} in new tab for comparison`}
+                    >
+                      Open in New Tab
+                    </Button>
+                  </Box>
+
+                  {/* Instructions for Approvers */}
+                  {guideDetails.isRevision && (
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block', fontStyle: 'italic' }}>
+                      💡 <strong>Tip for Approvers:</strong> Open both guides in separate tabs to compare the changes and verify that the feedback was addressed.
+                    </Typography>
+                  )}
+                </Box>
+              </Alert>
+            )}
+
             <Divider sx={{ my: 3 }} />
 
             {/* Lesson Content - Simplified Format */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: 'primary.main', textAlign: 'center' }}>
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h4" gutterBottom sx={{ fontWeight: 'fontWeightSemiBold', color: 'primary.main', textAlign: 'center' }}>
                 {guideDetails.lesson.identifier}
               </Typography>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 500, textAlign: 'center', mb: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'fontWeightMedium', textAlign: 'center', mb: 4 }}>
                 Goal: {guideDetails.lesson.goal}
               </Typography>
             </Box>
@@ -525,7 +702,7 @@ export default function TeacherGuideDetailPage() {
                 }}
               >
                 <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'fontWeightSemiBold', color: 'primary.main' }}>
                     {activity.title} – {activity.duration}
                   </Typography>
                   
@@ -556,7 +733,7 @@ export default function TeacherGuideDetailPage() {
           {/* Action Buttons */}
           <Card elevation={2} sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'fontWeightSemiBold' }}>
                 Actions
               </Typography>
               <Box display="flex" flexDirection="column" gap={2}>
@@ -566,6 +743,10 @@ export default function TeacherGuideDetailPage() {
                   startIcon={<ThumbUpIcon />}
                   onClick={() => setShowApprovalDialog(true)}
                   disabled={guideDetails.status === 'approved'}
+                  aria-label={guideDetails.status === 'approved' 
+                    ? 'Guide already approved' 
+                    : `Approve teacher guide: ${guideDetails.title}`
+                  }
                 >
                   Approve Guide
                 </Button>
@@ -575,6 +756,10 @@ export default function TeacherGuideDetailPage() {
                   startIcon={<ThumbDownIcon />}
                   onClick={() => setShowRejectionDialog(true)}
                   disabled={guideDetails.status === 'approved'}
+                  aria-label={guideDetails.status === 'approved' 
+                    ? 'Cannot request revision on approved guide' 
+                    : `Request revision for teacher guide: ${guideDetails.title}`
+                  }
                 >
                   Request Revision
                 </Button>
@@ -588,7 +773,7 @@ export default function TeacherGuideDetailPage() {
               <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                 <Box display="flex" alignItems="center">
                   <HistoryIcon sx={{ mr: 1 }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'fontWeightSemiBold' }}>
                     Recent Activity
                   </Typography>
                 </Box>
@@ -617,7 +802,7 @@ export default function TeacherGuideDetailPage() {
                       {entry.time}
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                      <TimelineDot size="small">
+                      <TimelineDot>
                         {getActionIcon(entry.action)}
                       </TimelineDot>
                       {index < guideDetails.detailedHistory.slice(-3).length - 1 && <TimelineConnector />}
@@ -654,10 +839,17 @@ export default function TeacherGuideDetailPage() {
       </Grid>
 
       {/* Approval Dialog */}
-      <Dialog open={showApprovalDialog} onClose={() => setShowApprovalDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Approve Teacher Guide</DialogTitle>
+      <Dialog 
+        open={showApprovalDialog} 
+        onClose={() => setShowApprovalDialog(false)} 
+        maxWidth="sm" 
+        fullWidth
+        aria-labelledby="approval-dialog-title"
+        aria-describedby="approval-dialog-description"
+      >
+        <DialogTitle id="approval-dialog-title">Approve Teacher Guide</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }} id="approval-dialog-description">
             Are you sure you want to approve this teacher guide? This action will make it available for use.
           </Typography>
           <TextField
@@ -682,10 +874,17 @@ export default function TeacherGuideDetailPage() {
       </Dialog>
 
       {/* Rejection Dialog */}
-      <Dialog open={showRejectionDialog} onClose={() => setShowRejectionDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Request Revision</DialogTitle>
+      <Dialog 
+        open={showRejectionDialog} 
+        onClose={() => setShowRejectionDialog(false)} 
+        maxWidth="sm" 
+        fullWidth
+        aria-labelledby="rejection-dialog-title"
+        aria-describedby="rejection-dialog-description"
+      >
+        <DialogTitle id="rejection-dialog-title">Request Revision</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }} id="rejection-dialog-description">
             Please provide specific feedback about what needs to be revised in this teacher guide.
           </Typography>
           <TextField
@@ -715,189 +914,192 @@ export default function TeacherGuideDetailPage() {
         </DialogActions>
       </Dialog>
 
-             {/* Enhanced History Drawer - Google Docs Style */}
-       <Drawer
-         anchor="right"
-         open={historyDrawerOpen}
-         onClose={() => setHistoryDrawerOpen(false)}
-         PaperProps={{
-           sx: {
-             width: '400px',
-             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-           },
-         }}
-       >
-         <Box display="flex" flexDirection="column" height="100%">
-           {/* Header */}
-           <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-             <Box display="flex" alignItems="center" justifyContent="space-between">
-               <Box>
-                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-                   Version history
-                 </Typography>
-                 <Typography variant="body2" color="text.secondary">
-                   {guideDetails.title}
-                 </Typography>
-               </Box>
-               <IconButton 
-                 onClick={() => setHistoryDrawerOpen(false)}
-                 sx={{ 
-                   color: 'text.secondary',
-                   '&:hover': { backgroundColor: 'action.hover' }
-                 }}
-               >
-                 <CloseIcon />
-               </IconButton>
-             </Box>
-           </Box>
+      {/* Enhanced History Drawer - Google Docs Style */}
+      <Drawer
+        anchor="right"
+        open={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        PaperProps={{
+          sx: {
+            width: '400px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          },
+        }}
+        aria-labelledby="history-drawer-title"
+        role="dialog"
+      >
+        <Box display="flex" flexDirection="column" height="100%">
+          {/* Header */}
+          <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }} id="history-drawer-title">
+                  Version history
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {guideDetails.title}
+                </Typography>
+              </Box>
+              <IconButton 
+                onClick={() => setHistoryDrawerOpen(false)}
+                sx={{ 
+                  color: 'text.secondary',
+                  '&:hover': { backgroundColor: 'action.hover' }
+                }}
+                aria-label="Close version history"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
 
-           {/* History List */}
-           <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-             {guideDetails.detailedHistory.map((entry, index) => (
-               <Box
-                 key={entry.id}
-                 sx={{
-                   p: 2,
-                   borderBottom: '1px solid',
-                   borderColor: 'divider',
-                   cursor: 'pointer',
-                   '&:hover': {
-                     backgroundColor: 'action.hover',
-                   },
-                   '&:last-child': {
-                     borderBottom: 'none',
-                   },
-                 }}
-                 onClick={() => toggleHistoryItem(entry.id)}
-               >
-                 <Box display="flex" alignItems="flex-start" gap={2}>
-                   {/* User Avatar */}
-                   <Avatar
-                     sx={{ 
-                       width: 32, 
-                       height: 32,
-                       bgcolor: getActionTypeColor(entry.type),
-                       fontSize: '0.875rem'
-                     }}
-                   >
-                     {entry.user.split(' ').map(n => n[0]).join('')}
-                   </Avatar>
+          {/* History List */}
+          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+            {guideDetails.detailedHistory.map((entry, index) => (
+              <Box
+                key={entry.id}
+                sx={{
+                  p: 2,
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                  '&:last-child': {
+                    borderBottom: 'none',
+                  },
+                }}
+                onClick={() => toggleHistoryItem(entry.id)}
+              >
+                <Box display="flex" alignItems="flex-start" gap={2}>
+                  {/* User Avatar */}
+                  <Avatar
+                    sx={{ 
+                      width: 32, 
+                      height: 32,
+                      bgcolor: getActionTypeColor(entry.type),
+                      fontSize: '0.875rem'
+                    }}
+                  >
+                    {entry.user.split(' ').map(n => n[0]).join('')}
+                  </Avatar>
 
-                   <Box flexGrow={1} minWidth={0}>
-                     {/* Action and Time */}
-                     <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                         {entry.action.charAt(0).toUpperCase() + entry.action.slice(1)}
-                       </Typography>
-                       <Chip
-                         label={entry.type}
-                         size="small"
-                         sx={{
-                           height: 20,
-                           fontSize: '0.65rem',
-                           bgcolor: getActionTypeColor(entry.type),
-                           color: 'white',
-                         }}
-                       />
-                     </Box>
+                  <Box flexGrow={1} minWidth={0}>
+                    {/* Action and Time */}
+                    <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {entry.action.charAt(0).toUpperCase() + entry.action.slice(1)}
+                      </Typography>
+                      <Chip
+                        label={entry.type}
+                        size="small"
+                        sx={{
+                          height: 20,
+                          fontSize: '0.65rem',
+                          bgcolor: getActionTypeColor(entry.type),
+                          color: 'white',
+                        }}
+                      />
+                    </Box>
 
-                     {/* User and Time */}
-                     <Typography variant="caption" color="text.secondary" display="block">
-                       {entry.user} • {entry.date} at {entry.time}
-                     </Typography>
+                    {/* User and Time */}
+                    <Typography variant="caption" color="text.secondary" display="block">
+                      {entry.user} • {entry.date} at {entry.time}
+                    </Typography>
 
-                     {/* Version Badge */}
-                     {entry.version && (
-                       <Chip
-                         label={`v${entry.version}`}
-                         size="small"
-                         variant="outlined"
-                         sx={{ mt: 1, height: 20, fontSize: '0.65rem' }}
-                       />
-                     )}
+                    {/* Version Badge */}
+                    {entry.version && (
+                      <Chip
+                        label={`v${entry.version}`}
+                        size="small"
+                        variant="outlined"
+                        sx={{ mt: 1, height: 20, fontSize: '0.65rem' }}
+                      />
+                    )}
 
-                     {/* Comment */}
-                     <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-                       {entry.comment}
-                     </Typography>
+                    {/* Comment */}
+                    <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                      {entry.comment}
+                    </Typography>
 
-                     {/* Expandable Changes List */}
-                     {entry.changes && entry.changes.length > 0 && (
-                       <Box sx={{ mt: 1 }}>
-                         <Box
-                           display="flex"
-                           alignItems="center"
-                           gap={0.5}
-                           sx={{
-                             cursor: 'pointer',
-                             color: 'primary.main',
-                             '&:hover': { color: 'primary.dark' },
-                           }}
-                         >
-                           {expandedHistoryItem === entry.id ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-                           <Typography variant="caption">
-                             {entry.changes.length} change{entry.changes.length !== 1 ? 's' : ''}
-                           </Typography>
-                         </Box>
+                    {/* Expandable Changes List */}
+                    {entry.changes && entry.changes.length > 0 && (
+                      <Box sx={{ mt: 1 }}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={0.5}
+                          sx={{
+                            cursor: 'pointer',
+                            color: 'primary.main',
+                            '&:hover': { color: 'primary.dark' },
+                          }}
+                        >
+                          {expandedHistoryItem === entry.id ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                          <Typography variant="caption">
+                            {entry.changes.length} change{entry.changes.length !== 1 ? 's' : ''}
+                          </Typography>
+                        </Box>
 
-                         <Collapse in={expandedHistoryItem === entry.id}>
-                           <Box sx={{ mt: 1, pl: 2, borderLeft: '2px solid', borderColor: 'divider' }}>
-                             {entry.changes.map((change, changeIndex) => (
-                               <Typography
-                                 key={changeIndex}
-                                 variant="caption"
-                                 display="block"
-                                 sx={{ 
-                                   py: 0.25,
-                                   color: 'text.secondary',
-                                   fontSize: '0.7rem'
-                                 }}
-                               >
-                                 • {change}
-                               </Typography>
-                             ))}
-                           </Box>
-                         </Collapse>
-                       </Box>
-                     )}
+                        <Collapse in={expandedHistoryItem === entry.id}>
+                          <Box sx={{ mt: 1, pl: 2, borderLeft: '2px solid', borderColor: 'divider' }}>
+                            {entry.changes.map((change, changeIndex) => (
+                              <Typography
+                                key={changeIndex}
+                                variant="caption"
+                                display="block"
+                                sx={{ 
+                                  py: 0.25,
+                                  color: 'text.secondary',
+                                  fontSize: '0.7rem'
+                                }}
+                              >
+                                • {change}
+                              </Typography>
+                            ))}
+                          </Box>
+                        </Collapse>
+                      </Box>
+                    )}
 
-                     {/* Action Buttons for Versions */}
-                     {(entry.action === 'approved' || entry.action === 'submitted') && (
-                       <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
-                         <Button
-                           size="small"
-                           variant="outlined"
-                           startIcon={<VisibilityIcon />}
-                           sx={{ fontSize: '0.65rem', py: 0.25, px: 1 }}
-                         >
-                           View
-                         </Button>
-                         {entry.action === 'approved' && (
-                           <Button
-                             size="small"
-                             variant="outlined"
-                             startIcon={<FileDownloadIcon />}
-                             sx={{ fontSize: '0.65rem', py: 0.25, px: 1 }}
-                           >
-                             Download
-                           </Button>
-                         )}
-                       </Box>
-                     )}
-                   </Box>
-                 </Box>
-               </Box>
-             ))}
-           </Box>
+                    {/* Action Buttons for Versions */}
+                    {(entry.action === 'approved' || entry.action === 'submitted') && (
+                      <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<VisibilityIcon />}
+                          sx={{ fontSize: '0.65rem', py: 0.25, px: 1 }}
+                        >
+                          View
+                        </Button>
+                        {entry.action === 'approved' && (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            startIcon={<FileDownloadIcon />}
+                            sx={{ fontSize: '0.65rem', py: 0.25, px: 1 }}
+                          >
+                            Download
+                          </Button>
+                        )}
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+            ))}
+          </Box>
 
-           {/* Footer */}
-           <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-             <Typography variant="caption" color="text.secondary" align="center" display="block">
-               Last updated: {guideDetails.lastModified}
-             </Typography>
-           </Box>
-         </Box>
-       </Drawer>
+          {/* Footer */}
+          <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="caption" color="text.secondary" align="center" display="block">
+              Last updated: {guideDetails.lastModified}
+            </Typography>
+          </Box>
+        </Box>
+      </Drawer>
     </Box>
   );
 }

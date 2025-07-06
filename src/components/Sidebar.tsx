@@ -10,25 +10,22 @@ import {
   Assignment as AssignmentIcon,
   Settings as SettingsIcon,
   Person as PersonIcon,
-  CloudUpload as CloudUploadIcon
+  TextFields as TextFieldsIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 280;
 
 const sidebarItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, active: true },
-  { text: 'My Courses', icon: <BookIcon />, active: false },
-  { text: 'Assignments', icon: <AssignmentIcon />, active: false },
-  { text: 'Profile', icon: <PersonIcon />, active: false },
-  { text: 'Settings', icon: <SettingsIcon />, active: false },
+  { text: 'Dashboard', icon: <DashboardIcon />, active: true, path: '/' },
+  { text: 'My Courses', icon: <BookIcon />, active: false, path: '/courses' },
+  { text: 'Assignments', icon: <AssignmentIcon />, active: false, path: '/assignments' },
+  { text: 'Typography Demo', icon: <TextFieldsIcon />, active: false, path: '/typography-demo' },
+  { text: 'Profile', icon: <PersonIcon />, active: false, path: '/profile' },
+  { text: 'Settings', icon: <SettingsIcon />, active: false, path: '/settings' },
 ];
 
 export default function Sidebar() {
   const router = useRouter();
-
-  const handleUploadGuide = () => {
-    router.push('/upload-guide');
-  };
 
   return (
     <Drawer
@@ -49,10 +46,10 @@ export default function Sidebar() {
       <Box sx={{ p: 3, textAlign: 'center' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
           <SchoolIcon sx={{ fontSize: 32, mr: 1, color: 'primary.main' }} />
-          <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: 'primary.main' }}>
+          <Typography variant="h6" component="div" sx={{ color: 'primary.main' }}>
             Rwanda
           </Typography>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: 'secondary.main', ml: 0.5 }}>
+          <Typography variant="h6" component="div" sx={{ color: 'secondary.main', ml: 0.5 }}>
             EQUIP
           </Typography>
         </Box>
@@ -63,36 +60,12 @@ export default function Sidebar() {
       
       <Divider sx={{ borderColor: '#E0E0E0' }} />
       
-      {/* Upload Guide Button */}
-      <Box sx={{ px: 2, py: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<CloudUploadIcon />}
-          fullWidth
-          onClick={handleUploadGuide}
-          sx={{
-            bgcolor: 'primary.main',
-            color: 'white',
-            fontWeight: 600,
-            py: 1.5,
-            borderRadius: 2,
-            '&:hover': {
-              bgcolor: 'primary.dark',
-            },
-            boxShadow: '0 2px 8px 0 rgba(25,118,210,0.3)',
-          }}
-        >
-          Upload Guide
-        </Button>
-      </Box>
-      
-      <Divider sx={{ borderColor: '#E0E0E0' }} />
-      
       {/* Navigation Menu */}
       <List sx={{ px: 2, py: 2 }}>
         {sidebarItems.map((item) => (
           <ListItem
             key={item.text}
+            onClick={() => router.push(item.path)}
             sx={{
               mb: 1,
               borderRadius: 2,

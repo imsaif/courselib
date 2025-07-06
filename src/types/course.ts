@@ -1,7 +1,7 @@
 export interface Course {
   id: string;
   title: string;
-  description: string;
+  description?: string; // Optional for MVP - not displayed in UI
   instructor: string;
   duration: string;
   durationRange: {
@@ -27,7 +27,7 @@ export interface Course {
     guides?: {
       id: string;
       title: string;
-      status: 'approved' | 'pending';
+      status: 'approved' | 'pending' | 'revision_requested' | 'resubmitted';
     }[];
   };
   createdAt: string;
@@ -58,7 +58,7 @@ export interface TeacherGuideLesson {
 export interface TeacherGuideDetails {
   id: string;
   title: string;
-  status: 'approved' | 'pending';
+  status: 'approved' | 'pending' | 'revision_requested' | 'resubmitted';
   courseName: string;
   description: string;
   author: string;
@@ -68,12 +68,21 @@ export interface TeacherGuideDetails {
   pages: number;
   lesson: TeacherGuideLesson; // Single lesson per guide
   detailedHistory: HistoryEntry[];
+  // Simple revision linking (MVP approach)
+  relatedGuideId?: string;
+  relatedGuideTitle?: string;
+  relatedGuideStatus?: 'approved' | 'pending' | 'revision_requested' | 'resubmitted';
+  revisionReason?: string;
+  isRevision?: boolean; // This is the revised version
+  isOriginal?: boolean; // This is the original that was rejected
 }
+
+
 
 export interface HistoryEntry {
   id: string;
-  action: 'created' | 'edited' | 'shared' | 'commented' | 'submitted' | 'reviewed' | 'approved';
-  type: 'document' | 'content' | 'collaboration' | 'review' | 'workflow';
+  action: 'created' | 'edited' | 'shared' | 'commented' | 'submitted' | 'reviewed' | 'approved' | 'resubmitted' | 'revised';
+  type: 'document' | 'content' | 'collaboration' | 'review' | 'workflow' | 'revision';
   date: string;
   time: string;
   user: string;
@@ -82,5 +91,10 @@ export interface HistoryEntry {
   comment: string;
   changes: string[];
   version: string;
-  status: 'draft' | 'pending' | 'revision_requested' | 'approved';
+  status: 'draft' | 'pending' | 'revision_requested' | 'approved' | 'resubmitted';
+  // New fields for revision workflow
+  isRevisionCycle?: boolean;
+  previousVersion?: string;
+  rejectionReason?: string;
+  changesSummary?: ChangesSummary;
 } 

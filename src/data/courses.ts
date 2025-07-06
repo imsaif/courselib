@@ -40,8 +40,13 @@ export const courses: Course[] = [
         },
         {
           id: 'guide-1-3',
-          title: 'Number Line Activities Guide',
-          status: 'pending'
+          title: 'Number Line Activities Guide (Original)',
+          status: 'revision_requested'
+        },
+        {
+          id: 'guide-1-3-v2',
+          title: 'Number Line Activities Guide (Revised)',
+          status: 'resubmitted'
         },
         {
           id: 'guide-1-4',

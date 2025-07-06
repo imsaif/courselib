@@ -1,0 +1,146 @@
+# Course Library - Original Product Requirements Document
+
+**⚠️ NOTE: This is the original PRD. Active development now follows the [MVP PRD](mvp_prd.txt) for prototype demonstration.**
+
+<context>
+# Overview  
+A modern web-based course library management system for educational institutions, specifically designed for Rwanda EQUIP. The platform allows educators to browse courses, manage teacher guides, and upload educational content. The system addresses the need for organized course materials, teacher guide management, and streamlined educational content delivery across different grade levels and subjects.
+
+**Current Implementation Status**: This original vision has been adapted into a focused MVP prototype. See [MVP PRD](mvp_prd.txt) for current development scope.
+
+# Core Features  
+## Course Catalog & Management ✅ IMPLEMENTED
+- Browse and search courses with advanced filtering (category, grade level, search terms)
+- View detailed course information including duration, textbook requirements, and teacher guide status
+- Display course statistics and enrollment data
+- Support for multiple course categories (Mathematics, Language Arts, Science, Social Studies, Arts)
+- Grade level organization (Grade 1-6)
+
+## Teacher Guide System 🔄 IN PROGRESS
+- Upload and manage teacher guides with multi-step workflow
+- Guide approval system (pending/approved status tracking)
+- Detailed guide content display with lesson activities and instructions
+- Version control and history tracking for guides
+- Support for different guide types and educational methodologies
+
+## Dashboard & Analytics ✅ IMPLEMENTED
+- Comprehensive dashboard showing total courses, available courses, and pending guides
+- Course status indicators and progress tracking
+- Statistical overview cards for quick insights
+
+## User Experience ✅ IMPLEMENTED
+- Clean, modern Material-UI based interface
+- Responsive design supporting desktop and mobile
+- Intuitive navigation with sidebar and breadcrumb systems
+- Search and filter capabilities with real-time results
+- Pagination for large course catalogs
+</context>
+
+<PRD>
+# Technical Architecture ✅ IMPLEMENTED
+## Frontend Framework
+- Next.js 14 with TypeScript for type safety and modern React development
+- Material-UI (MUI) v5 for consistent design system and components
+- Emotion for CSS-in-JS styling with custom theme configuration
+
+## Data Management
+- TypeScript interfaces for Course, TeacherGuide, and related data structures
+- Mock data system with comprehensive course information
+- Support for textbook requirements, duration ranges, and location-based course delivery
+
+## Component Architecture
+- Reusable UI components (Sidebar, Breadcrumbs, Course cards)
+- Page-based routing with dynamic course and guide detail pages
+- Form components for multi-step teacher guide upload process
+
+## Key Data Models ✅ IMPLEMENTED
+- Course: id, title, description, instructor, duration, level, category, price, rating, textbook requirements, teacher guides
+- Teacher Guide: id, title, status, lessons with activities and instructions, version control, approval workflow
+- User/Instructor: name, role, avatar for guide management
+
+# Development Roadmap - UPDATED FOR MVP APPROACH
+
+## ✅ Phase 1: Enhanced Course Management - COMPLETE
+- ✅ Improved course data structure and expanded mock data
+- ✅ Detailed course information and metadata
+- ⏳ Course editing capabilities (deferred for MVP)
+- ⏳ Course creation form (replaced with mock data approach)
+
+## 🔄 Phase 2: Teacher Guide File Management - IN PROGRESS
+- 🔄 Guide upload functionality with local file handling
+- ⏳ Guide content preview and display
+- ⏳ Guide editing and updating capabilities (post-MVP)
+- ⏳ Guide template system (post-MVP)
+
+## ⏳ Phase 3: Content Organization & Search - PARTIALLY COMPLETE
+- ✅ Enhanced search functionality with filtering
+- ✅ Course categorization and tagging
+- ✅ Sorting options for courses
+- ⏳ Export functionality (post-MVP)
+
+## ✅ Phase 4: UI/UX Improvements - COMPLETE
+- ✅ Mobile responsiveness enhancements
+- ✅ Better loading states and error handling
+- ✅ Improved navigation and user flow
+- ✅ Enhanced visual design and branding
+
+# Current Implementation Focus
+This original PRD has been adapted into an MVP approach focusing on:
+
+1. **Prototype Demonstration** rather than full production system
+2. **Core Workflows** showing upload → review → approval process
+3. **Simplified Authentication** for demo purposes
+4. **Mock Data Integration** instead of complex backend systems
+
+## Logical Dependency Chain - UPDATED
+### ✅ Foundation Layer - COMPLETE
+1. ✅ Enhanced course data structure and management
+2. ✅ Course display and organization
+3. ✅ User interface components
+
+### 🔄 Core Functionality - IN PROGRESS
+1. 🔄 Teacher guide upload workflow (UI complete)
+2. ⏳ Guide approval and review interface
+3. ⏳ Status management and tracking
+
+### ⏳ Advanced Features - POST-MVP
+1. Authentication and role management
+2. External system integrations
+3. Advanced analytics and reporting
+
+# Risks and Mitigations - UPDATED
+## Current Approach
+- **Prototype Focus**: Building demonstrable workflows without production complexity
+- **Mock Data**: Using comprehensive test data for all demonstrations
+- **Simplified Architecture**: Client-side processing for MVP demo
+
+## Post-MVP Considerations
+- **Scalability**: Architecture prepared for backend integration
+- **Security**: Authentication system designed but deferred
+- **Integration**: API points identified for Scheduler/Xyleme connection
+
+# Appendix - CURRENT STATUS
+## ✅ Completed Implementation
+- ✅ Frontend UI components and navigation
+- ✅ Course browsing with filtering and pagination
+- ✅ Course detail views with guide status
+- ✅ Material-UI theme and responsive design
+- ✅ Multi-step guide upload form
+
+## 🔄 In Progress
+- 🔄 Guide approval workflow interface
+- 🔄 Status management system
+
+## ⏳ Planned for MVP Completion
+- ⏳ Approver dashboard
+- ⏳ Individual guide review interface
+- ⏳ End-to-end workflow demonstration
+
+## 🚫 Deferred Post-MVP
+- Authentication and role-based access
+- File upload processing and storage
+- External system integrations
+- Advanced search and analytics
+
+**For current development status and next steps, see [MVP PRD](mvp_prd.txt)**
+</PRD> 
