@@ -367,8 +367,8 @@ export default function CourseDetailsPage() {
           {/* Quick Info Chips */}
           <Box display="flex" flexWrap="wrap" gap={1}>
             <Chip 
-              icon={<LocationOnIcon />} 
-              label={course.location} 
+                        icon={<LocationOnIcon />}
+          label={course.geography} 
               color="primary" 
               variant="outlined" 
               size="medium"
@@ -504,15 +504,28 @@ export default function CourseDetailsPage() {
                   {course.teacherGuides.guides && course.teacherGuides.guides.length > 0 && (
                     <>
                       <Typography variant="body2" color="text.secondary">
-                        {course.teacherGuides.guides.length} guide{course.teacherGuides.guides.length !== 1 ? 's' : ''} total
+                        {course.teacherGuides.guides.length} guide{course.teacherGuides.guides.length !== 1 ? 's' : ''} available
+                        {course.teacherGuides.expectedGuides && course.teacherGuides.expectedGuides.length > 0 && (
+                          <>, {course.teacherGuides.expectedGuides.length} missing</>
+                        )}
                       </Typography>
                       
                       {(() => {
                         const needsRevision = course.teacherGuides.guides.filter(g => g.status === 'revision_requested').length;
                         const pending = course.teacherGuides.guides.filter(g => g.status === 'pending' || g.status === 'resubmitted').length;
+                        const approved = course.teacherGuides.guides.filter(g => g.status === 'approved').length;
+                        const missingTotal = course.teacherGuides.expectedGuides?.length || 0;
                         
                         return (
                           <>
+                            {approved > 0 && (
+                              <Chip
+                                label={`${approved} approved`}
+                                color="success"
+                                size="small"
+                                variant="outlined"
+                              />
+                            )}
                             {needsRevision > 0 && (
                               <Chip
                                 label={`${needsRevision} need${needsRevision !== 1 ? '' : 's'} revision`}
@@ -525,6 +538,14 @@ export default function CourseDetailsPage() {
                               <Chip
                                 label={`${pending} pending review`}
                                 color="warning"
+                                size="small"
+                                variant="outlined"
+                              />
+                            )}
+                            {missingTotal > 0 && (
+                              <Chip
+                                label={`${missingTotal} missing`}
+                                color="info"
                                 size="small"
                                 variant="outlined"
                               />
@@ -601,7 +622,7 @@ export default function CourseDetailsPage() {
 
                   <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      Available Teacher Guides:
+                      Teacher Guides Status:
                     </Typography>
                     
                     {course.teacherGuides.guides.length > 3 && (
@@ -625,6 +646,11 @@ export default function CourseDetailsPage() {
                       </Box>
                     )}
                   </Box>
+
+                  {/* Available Guides Section */}
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'success.main' }}>
+                    📚 Available Guides ({course.teacherGuides.guides.length})
+                  </Typography>
                   <Grid container spacing={2}>
                     {course.teacherGuides.guides
                       .filter((guide) => {
@@ -734,6 +760,93 @@ export default function CourseDetailsPage() {
                     <Alert severity="info" sx={{ mt: 2 }}>
                       No guides found for the "{guideFilter.replace('_', ' ')}" filter.
                     </Alert>
+                  )}
+
+                  {/* Missing/Expected Guides Section */}
+                  {course.teacherGuides.expectedGuides && course.teacherGuides.expectedGuides.length > 0 && (
+                    <Box sx={{ mt: 4 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'warning.main' }}>
+                        ⚠️ Missing Teacher Guides ({course.teacherGuides.expectedGuides.length})
+                      </Typography>
+                      
+                      <Alert severity="warning" sx={{ mb: 3 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Essential guides are missing for this course
+                        </Typography>
+                        <Typography variant="body2">
+                          These guides have been identified as important for effective course delivery. Upload them to help teachers succeed.
+                        </Typography>
+                      </Alert>
+
+                      <Grid container spacing={2}>
+                        {course.teacherGuides.expectedGuides
+                          .map((expectedGuide) => (
+                          <Grid item xs={12} key={expectedGuide.id}>
+                                                         <Card 
+                               variant="outlined"
+                               sx={{ 
+                                 p: 2,
+                                 border: '2px dashed',
+                                 borderColor: 'grey.400',
+                                 backgroundColor: 'grey.50',
+                                 '&:hover': { 
+                                   boxShadow: 2,
+                                   borderStyle: 'solid',
+                                   borderColor: 'primary.main'
+                                 },
+                                 transition: 'all 0.2s',
+                               }}
+                             >
+                              <Box display="flex" alignItems="center" justifyContent="space-between">
+                                <Box display="flex" alignItems="center" gap={2} flex={1}>
+                                                                     <Box display="flex" alignItems="center">
+                                     <AssignmentIcon sx={{ 
+                                       color: 'text.secondary',
+                                       opacity: 0.7
+                                     }} />
+                                   </Box>
+                                                                     <Box flex={1}>
+                                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                       {expectedGuide.title}
+                                     </Typography>
+                                   </Box>
+                                </Box>
+                                
+                                <Box display="flex" alignItems="center" gap={1}>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    startIcon={<CloudUploadIcon />}
+                                    onClick={() => {
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        title: expectedGuide.title,
+                                        description: expectedGuide.description,
+                                      }));
+                                      openNewGuideDialog();
+                                    }}
+                                    sx={{
+                                      borderRadius: 1.5,
+                                      fontWeight: 600,
+                                      minWidth: 120,
+                                    }}
+                                  >
+                                    Upload Guide
+                                  </Button>
+                                </Box>
+                              </Box>
+                            </Card>
+                          </Grid>
+                        ))}
+                      </Grid>
+                      
+                      <Box sx={{ mt: 3, p: 2, backgroundColor: 'grey.50', borderRadius: 2 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                          💡 <strong>Pro Tip:</strong> Upload these missing guides to provide teachers with comprehensive resources for effective instruction.
+                        </Typography>
+                      </Box>
+                    </Box>
                   )}
                 </Box>
               ) : (

@@ -10,7 +10,7 @@ export interface Course {
   };
   level: 'Grade 1' | 'Grade 2' | 'Grade 3' | 'Grade 4' | 'Grade 5' | 'Grade 6';
   category: string;
-  location: 'Global' | 'Regional' | 'Programme';
+  geography: 'Bridge Kenya' | 'Group Nigeria' | 'Group A (EdoBest and Rwanda)' | 'Global group (target tenants will be all tenants of NewGlobe)';
   imageUrl: string;
   price: number;
   rating: number;
@@ -29,6 +29,12 @@ export interface Course {
       title: string;
       status: 'approved' | 'pending' | 'revision_requested' | 'resubmitted';
     }[];
+    expectedGuides?: {
+      id: string;
+      title: string;
+      description: string;
+      suggestedBy: string;
+    }[];
   };
   createdAt: string;
   updatedAt: string;
@@ -37,9 +43,11 @@ export interface Course {
 export interface CourseFilters {
   category?: string;
   level?: string;
+  geography?: string;
   priceRange?: [number, number];
   rating?: number;
   search?: string;
+  guideStatus?: string;
 }
 
 // New simplified teacher guide types

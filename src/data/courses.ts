@@ -13,7 +13,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 1',
     category: 'Mathematics',
-    location: 'Global',
+    geography: 'Global group (target tenants will be all tenants of NewGlobe)',
     imageUrl: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=300&fit=crop',
     price: 25.00,
     rating: 4.8,
@@ -35,33 +35,45 @@ export const courses: Course[] = [
         },
         {
           id: 'guide-1-2',
-          title: 'Subtraction Concepts Teacher Guide',
-          status: 'approved'
+          title: 'Subtraction Concepts Teacher Guide', 
+          status: 'pending'
         },
         {
           id: 'guide-1-3',
-          title: 'Number Line Activities Guide (Original)',
+          title: 'Number Line Activities Guide',
           status: 'revision_requested'
-        },
+        }
+      ],
+      expectedGuides: [
         {
-          id: 'guide-1-3-v2',
-          title: 'Number Line Activities Guide (Revised)',
-          status: 'resubmitted'
-        },
-        {
-          id: 'guide-1-4',
+          id: 'expected-1-1',
           title: 'Math Games and Exercises Guide',
-          status: 'pending'
+          description: 'Interactive games and hands-on exercises to reinforce addition and subtraction concepts',
+          suggestedBy: 'Curriculum Team'
         },
         {
-          id: 'guide-1-5',
+          id: 'expected-1-2', 
           title: 'Assessment and Evaluation Guide',
-          status: 'approved'
+          description: 'Comprehensive assessment tools and rubrics for evaluating student progress',
+          suggestedBy: 'Assessment Team'
         },
         {
-          id: 'guide-1-6',
+          id: 'expected-1-3',
           title: 'Parent Homework Support Guide',
-          status: 'pending'
+          description: 'Guidelines for parents to effectively support their children with homework',
+          suggestedBy: 'Parent Engagement Team'
+        },
+        {
+          id: 'expected-1-4',
+          title: 'Differentiated Learning Strategies Guide',
+          description: 'Strategies for adapting lessons for students with different learning needs',
+          suggestedBy: 'Special Education Team'
+        },
+        {
+          id: 'expected-1-5',
+          title: 'Technology Integration Guide',
+          description: 'How to incorporate digital tools and apps into math lessons',
+          suggestedBy: 'Technology Team'
         }
       ]
     },
@@ -80,7 +92,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 3',
     category: 'Language Arts',
-    location: 'Regional',
+    geography: 'Bridge Kenya',
     imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop',
     price: 30.00,
     rating: 4.9,
@@ -147,7 +159,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 2',
     category: 'Science',
-    location: 'Programme',
+    geography: 'Group A (EdoBest and Rwanda)',
     imageUrl: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=300&fit=crop',
     price: 35.00,
     rating: 4.7,
@@ -175,7 +187,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 4',
     category: 'Mathematics',
-    location: 'Global',
+    geography: 'Global group (target tenants will be all tenants of NewGlobe)',
     imageUrl: 'https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400&h=300&fit=crop',
     price: 28.00,
     rating: 4.8,
@@ -247,7 +259,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 4',
     category: 'Language Arts',
-    location: 'Regional',
+    geography: 'Group Nigeria',
     imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=300&fit=crop',
     price: 32.00,
     rating: 4.6,
@@ -307,7 +319,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 5',
     category: 'Social Studies',
-    location: 'Global',
+    geography: 'Global group (target tenants will be all tenants of NewGlobe)',
     imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
     price: 30.00,
     rating: 4.9,
@@ -397,7 +409,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 1',
     category: 'Language Arts',
-    location: 'Global',
+    geography: 'Global group (target tenants will be all tenants of NewGlobe)',
     imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
     price: 22.00,
     rating: 4.8,
@@ -411,48 +423,7 @@ export const courses: Course[] = [
     teacherGuides: {
       required: true,
       status: 'pending',
-      guides: [
-        {
-          id: 'guide-8-1',
-          title: 'Phonics Instruction Teacher Guide',
-          status: 'approved'
-        },
-        {
-          id: 'guide-8-2',
-          title: 'Letter Recognition Activities Guide',
-          status: 'approved'
-        },
-        {
-          id: 'guide-8-3',
-          title: 'Sound Blending Techniques Guide',
-          status: 'pending'
-        },
-        {
-          id: 'guide-8-4',
-          title: 'Sight Words Practice Guide',
-          status: 'pending'
-        },
-        {
-          id: 'guide-8-5',
-          title: 'Reading Readiness Assessment Guide',
-          status: 'approved'
-        },
-        {
-          id: 'guide-8-6',
-          title: 'Alphabet Songs and Activities Guide',
-          status: 'pending'
-        },
-        {
-          id: 'guide-8-7',
-          title: 'Pre-Reading Skills Development Guide',
-          status: 'pending'
-        },
-        {
-          id: 'guide-8-8',
-          title: 'Parent Support Materials Guide',
-          status: 'pending'
-        }
-      ]
+      guides: []
     },
     createdAt: '2024-01-13',
     updatedAt: '2024-01-13'
@@ -469,7 +440,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 5',
     category: 'Mathematics',
-    location: 'Regional',
+    geography: 'Group Nigeria',
     imageUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop',
     price: 33.00,
     rating: 4.6,
@@ -536,7 +507,7 @@ export const courses: Course[] = [
     },
     level: 'Grade 4',
     category: 'Science',
-    location: 'Global',
+    geography: 'Global group (target tenants will be all tenants of NewGlobe)',
     imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop',
     price: 29.00,
     rating: 4.9,
