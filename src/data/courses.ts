@@ -31,17 +31,20 @@ export const courses: Course[] = [
         {
           id: 'guide-1-1',
           title: 'Addition Concepts Teacher Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 1
         },
         {
           id: 'guide-1-2',
           title: 'Subtraction Concepts Teacher Guide', 
-          status: 'pending'
+          status: 'pending',
+          order: 2
         },
         {
           id: 'guide-1-3',
           title: 'Number Line Activities Guide',
-          status: 'revision_requested'
+          status: 'revision_requested',
+          order: 3
         }
       ],
       expectedGuides: [
@@ -110,37 +113,44 @@ export const courses: Course[] = [
         {
           id: 'guide-2-1',
           title: 'Reading Strategies Teacher Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 1
         },
         {
           id: 'guide-2-2',
           title: 'Vocabulary Building Activities Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 2
         },
         {
           id: 'guide-2-3',
           title: 'Comprehension Questions Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-2-4',
           title: 'Story Discussion Prompts Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 4
         },
         {
           id: 'guide-2-5',
           title: 'Reading Assessment Rubrics Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 5
         },
         {
           id: 'guide-2-6',
           title: 'Phonics Integration Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 6
         },
         {
           id: 'guide-2-7',
           title: 'Creative Writing Extensions Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 7
         }
       ]
     },
@@ -205,42 +215,50 @@ export const courses: Course[] = [
         {
           id: 'guide-4-1',
           title: 'Multiplication Strategies Teacher Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 1
         },
         {
           id: 'guide-4-2',
           title: 'Practice Activities Teacher Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 2
         },
         {
           id: 'guide-4-3',
           title: 'Times Table Songs and Rhymes Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-4-4',
           title: 'Visual Learning Aids Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 4
         },
         {
           id: 'guide-4-5',
           title: 'Multiplication Games Collection Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 5
         },
         {
           id: 'guide-4-6',
           title: 'Progress Tracking and Assessment Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 6
         },
         {
           id: 'guide-4-7',
           title: 'Differentiated Learning Strategies Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 7
         },
         {
           id: 'guide-4-8',
           title: 'Technology Integration Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 8
         }
       ]
     },
@@ -275,32 +293,38 @@ export const courses: Course[] = [
         {
           id: 'guide-5-1',
           title: 'Creative Writing Techniques Teacher Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 1
         },
         {
           id: 'guide-5-2',
           title: 'Poetry Writing Activities Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 2
         },
         {
           id: 'guide-5-3',
           title: 'Storytelling Prompts and Ideas Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-5-4',
           title: 'Grammar and Mechanics Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 4
         },
         {
           id: 'guide-5-5',
           title: 'Peer Review and Editing Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 5
         },
         {
           id: 'guide-5-6',
           title: 'Journal Writing Techniques Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 6
         }
       ]
     },
@@ -337,32 +361,38 @@ export const courses: Course[] = [
         {
           id: 'guide-6-1',
           title: 'Geography Activities Teacher Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 1
         },
         {
           id: 'guide-6-2',
           title: 'Map Reading Skills Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 2
         },
         {
           id: 'guide-6-3',
           title: 'Cultural Studies Activities Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-6-4',
           title: 'Country Research Projects Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 4
         },
         {
           id: 'guide-6-5',
           title: 'Interactive Geography Games Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 5
         },
         {
           id: 'guide-6-6',
           title: 'Virtual Field Trips Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 6
         }
       ]
     },
@@ -458,37 +488,44 @@ export const courses: Course[] = [
         {
           id: 'guide-9-1',
           title: 'Fraction Concepts Teacher Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 1
         },
         {
           id: 'guide-9-2',
           title: 'Visual Fraction Models Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 2
         },
         {
           id: 'guide-9-3',
           title: 'Fraction Addition and Subtraction Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-9-4',
           title: 'Real-World Fraction Applications Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 4
         },
         {
           id: 'guide-9-5',
           title: 'Comparing and Ordering Fractions Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 5
         },
         {
           id: 'guide-9-6',
           title: 'Fraction Assessment Tools Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 6
         },
         {
           id: 'guide-9-7',
           title: 'Remediation Strategies Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 7
         }
       ]
     },
@@ -525,47 +562,56 @@ export const courses: Course[] = [
         {
           id: 'guide-10-1',
           title: 'Life Science Activities Teacher Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 1
         },
         {
           id: 'guide-10-2',
           title: 'Plant and Animal Studies Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 2
         },
         {
           id: 'guide-10-3',
           title: 'Habitat Exploration Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 3
         },
         {
           id: 'guide-10-4',
           title: 'Life Cycles Investigation Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 4
         },
         {
           id: 'guide-10-5',
           title: 'Scientific Method for Young Learners Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 5
         },
         {
           id: 'guide-10-6',
           title: 'Nature Observation Techniques Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 6
         },
         {
           id: 'guide-10-7',
           title: 'Classification Activities Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 7
         },
         {
           id: 'guide-10-8',
           title: 'Lab Safety for Elementary Students Guide',
-          status: 'pending'
+          status: 'pending',
+          order: 8
         },
         {
           id: 'guide-10-9',
           title: 'Science Journal Templates Guide',
-          status: 'approved'
+          status: 'approved',
+          order: 9
         }
       ]
     },

@@ -45,10 +45,12 @@ import {
   OpenInNew as OpenInNewIcon,
   CloudUpload as CloudUploadIcon,
   Add as AddIcon,
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { courses } from '@/data/courses';
 import { Course } from '@/types/course';
 import FirstTimeGuideUpload from '@/components/FirstTimeGuideUpload';
+import LessonReorderDialog from '@/components/LessonReorderDialog';
 
 // Types for form data
 interface GuideFormData {
@@ -85,6 +87,16 @@ export default function CourseDetailsPage() {
   // Upload state
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  
+  // Reordering state
+  const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
+  const [newlyAddedGuideId, setNewlyAddedGuideId] = useState<string | undefined>();
+  const [removedGuideTitle, setRemovedGuideTitle] = useState<string | undefined>();
+  const [reorderMode, setReorderMode] = useState<'add' | 'remove'>('add');
+  
+  // Removal confirmation state
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
+  const [guideToRemove, setGuideToRemove] = useState<{id: string; title: string} | null>(null);
   const [formData, setFormData] = useState<GuideFormData>({
     title: '',
     description: '',
@@ -199,11 +211,23 @@ export default function CourseDetailsPage() {
         courses[courseIndex].teacherGuides.guides = [];
       }
       // Add the new guide (in real app, this would be handled by the API)
+      const newGuideId = `guide-${Date.now()}`;
       courses[courseIndex].teacherGuides.guides!.push({
-        id: `guide-${Date.now()}`,
+        id: newGuideId,
         title: 'New Teacher Guide',
-        status: 'pending'
+        status: 'pending',
+        order: 1
       });
+      
+      // For first time upload, if there are multiple guides expected, trigger reordering
+      const hasMultipleExpectedGuides = course.teacherGuides.expectedGuides && course.teacherGuides.expectedGuides.length > 1;
+      if (hasMultipleExpectedGuides) {
+        setFirstTimeUploadOpen(false);
+        setNewlyAddedGuideId(newGuideId);
+        setReorderMode('add');
+        setReorderDialogOpen(true);
+        return;
+      }
     }
     
     setFirstTimeUploadOpen(false);
@@ -269,10 +293,12 @@ export default function CourseDetailsPage() {
       console.log(`Submitting ${formData.isRevision ? 'revision' : 'new guide'} for course:`, courseId, 'with data:', formData);
       
       // Create new guide object
+      const newGuideId = `guide-${Date.now()}`;
       const newGuide = {
-        id: `guide-${Date.now()}`,
+        id: newGuideId,
         title: formData.title,
-        status: 'pending' as const
+        status: 'pending' as const,
+        order: undefined // Will be set during reordering
       };
 
       // Find course and add guide (in real app, this would be an API call)
@@ -294,7 +320,7 @@ export default function CourseDetailsPage() {
       // Show success state
       setUploadSuccess(true);
       
-      // Wait a moment to show success, then close
+      // Wait a moment to show success, then trigger reordering flow
       setTimeout(() => {
         // Reset form and close dialog
         setFormData({
@@ -316,8 +342,10 @@ export default function CourseDetailsPage() {
         setActiveStep(0);
         setUploadSuccess(false);
         
-        // Refresh the page to show new guide
-        window.location.reload();
+        // Instead of refreshing, trigger reordering dialog
+        setNewlyAddedGuideId(newGuideId);
+        setReorderMode('add');
+        setReorderDialogOpen(true);
       }, 1500);
       
     } catch (error) {
@@ -336,6 +364,57 @@ export default function CourseDetailsPage() {
     }
     
     return baseValid;
+  };
+
+  // Handle reordering save
+  const handleReorderSave = (reorderedGuides: any[]) => {
+    const courseIndex = courses.findIndex(c => c.id === courseId);
+    if (courseIndex !== -1 && courses[courseIndex].teacherGuides.guides) {
+      // Update the guides with the new order
+      courses[courseIndex].teacherGuides.guides = reorderedGuides;
+    }
+    
+    // Clear the state and refresh the page to show changes
+    setNewlyAddedGuideId(undefined);
+    setRemovedGuideTitle(undefined);
+    setReorderMode('add');
+    window.location.reload();
+  };
+
+  // Handle guide removal initiation
+  const handleRemoveGuide = (guide: {id: string; title: string}) => {
+    setGuideToRemove(guide);
+    setRemoveConfirmOpen(true);
+  };
+
+  // Handle confirmed guide removal
+  const handleConfirmRemoval = () => {
+    if (!guideToRemove) return;
+
+    const courseIndex = courses.findIndex(c => c.id === courseId);
+    if (courseIndex !== -1 && courses[courseIndex].teacherGuides.guides) {
+      // Remove the guide from the array
+      const updatedGuides = courses[courseIndex].teacherGuides.guides.filter(
+        guide => guide.id !== guideToRemove.id
+      );
+      
+      // Update the course data
+      courses[courseIndex].teacherGuides.guides = updatedGuides;
+      
+      // If there are remaining guides, trigger reordering flow
+      if (updatedGuides.length > 1) {
+        setRemoveConfirmOpen(false);
+        setRemovedGuideTitle(guideToRemove.title);
+        setReorderMode('remove');
+        setReorderDialogOpen(true);
+      } else {
+        // If only one or no guides remain, just refresh the page
+        setRemoveConfirmOpen(false);
+        window.location.reload();
+      }
+    }
+    
+    setGuideToRemove(null);
   };
 
   return (
@@ -660,7 +739,13 @@ export default function CourseDetailsPage() {
                         if (guideFilter === 'approved') return guide.status === 'approved';
                         return true;
                       })
-                      .map((guide) => (
+                      .sort((a, b) => {
+                        // Sort by order field, with fallback to original array order
+                        const orderA = a.order ?? 999;
+                        const orderB = b.order ?? 999;
+                        return orderA - orderB;
+                      })
+                      .map((guide, index) => (
                       <Grid item xs={12} key={guide.id}>
                         <Card 
                           variant="outlined" 
@@ -672,12 +757,30 @@ export default function CourseDetailsPage() {
                         >
                           <Box display="flex" alignItems="center" justifyContent="space-between">
                             <Box display="flex" alignItems="center" gap={2} flex={1}>
-                              <Box display="flex" alignItems="center">
+                              <Box display="flex" alignItems="center" gap={2}>
+                                <Typography 
+                                  variant="h6" 
+                                  sx={{ 
+                                    fontWeight: 600,
+                                    backgroundColor: 'primary.main',
+                                    color: 'white',
+                                    borderRadius: '50%',
+                                    width: 32,
+                                    height: 32,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.9rem',
+                                    minWidth: 32
+                                  }}
+                                >
+                                  {guide.order ?? index + 1}
+                                </Typography>
                                 {getTeacherGuideStatusIcon(guide.status)}
                               </Box>
                               <Box flex={1}>
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                                  {guide.title}
+                                  Lesson {guide.order ?? index + 1}: {guide.title}
                                 </Typography>
                                 <Box display="flex" alignItems="center" gap={1} mt={0.5}>
                                   <Chip
@@ -722,6 +825,18 @@ export default function CourseDetailsPage() {
                                 }}
                               >
                                 View Details
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="small"
+                                startIcon={<DeleteIcon />}
+                                onClick={() => handleRemoveGuide(guide)}
+                                sx={{
+                                  borderRadius: 1.5,
+                                }}
+                              >
+                                Remove
                               </Button>
                             </Box>
                           </Box>
@@ -1219,6 +1334,82 @@ export default function CourseDetailsPage() {
             onCancel={() => setFirstTimeUploadOpen(false)}
           />
         </DialogContent>
+      </Dialog>
+
+      {/* Lesson Reorder Dialog */}
+      <LessonReorderDialog
+        open={reorderDialogOpen}
+        onClose={() => {
+          setReorderDialogOpen(false);
+          setNewlyAddedGuideId(undefined);
+          setRemovedGuideTitle(undefined);
+          setReorderMode('add');
+        }}
+        onSave={handleReorderSave}
+        guides={course.teacherGuides.guides || []}
+        courseTitle={course.title}
+        newlyAddedGuideId={newlyAddedGuideId}
+        removedGuideTitle={removedGuideTitle}
+        mode={reorderMode}
+      />
+
+      {/* Remove Guide Confirmation Dialog */}
+      <Dialog
+        open={removeConfirmOpen}
+        onClose={() => {
+          setRemoveConfirmOpen(false);
+          setGuideToRemove(null);
+        }}
+        PaperProps={{
+          sx: { borderRadius: 3 }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Box display="flex" alignItems="center">
+            <DeleteIcon sx={{ mr: 1, color: 'error.main' }} />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Remove Teacher Guide
+            </Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom>
+            Are you sure you want to remove this guide from the course?
+          </Typography>
+          {guideToRemove && (
+            <Typography variant="body1" sx={{ fontWeight: 600, color: 'error.main', mb: 2 }}>
+              "{guideToRemove.title}"
+            </Typography>
+          )}
+          <Alert severity="warning" sx={{ mt: 2 }}>
+            <Typography variant="body2">
+              <strong>This action cannot be undone.</strong> The guide will be permanently removed from this course.
+              {course.teacherGuides.guides && course.teacherGuides.guides.length > 2 && (
+                <> You'll be able to reorder the remaining guides after removal.</>
+              )}
+            </Typography>
+          </Alert>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button
+            onClick={() => {
+              setRemoveConfirmOpen(false);
+              setGuideToRemove(null);
+            }}
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmRemoval}
+            variant="contained"
+            color="error"
+            startIcon={<DeleteIcon />}
+            sx={{ fontWeight: 600 }}
+          >
+            Remove Guide
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

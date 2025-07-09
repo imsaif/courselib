@@ -28,12 +28,14 @@ export interface Course {
       id: string;
       title: string;
       status: 'approved' | 'pending' | 'revision_requested' | 'resubmitted';
+      order?: number; // Add order field for lesson sequencing
     }[];
     expectedGuides?: {
       id: string;
       title: string;
       description: string;
       suggestedBy: string;
+      order?: number; // Add order field for expected guides too
     }[];
   };
   createdAt: string;
